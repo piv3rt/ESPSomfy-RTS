@@ -224,7 +224,7 @@ int16_t GitRepo::getReleases(uint8_t num) {
         return httpCode;
       }
     }
-    https.end();  
+    https.end();
     sclient.stop();
   }
   settings.printAvailHeap();
@@ -254,7 +254,7 @@ void GitRepo::toJSON(JsonResponse &json) {
 void GitUpdater::loop() {
   if(!net.connected()) return;
   if(this->status == GIT_STATUS_READY) {
-    if(settings.checkForUpdate && 
+    if(settings.checkForUpdate &&
       (millis() > net.connectTime + 60000) && // Wait a minute before checking after connection.
       (this->lastCheck + 86400000 < millis() || this->lastCheck == 0) && !rebootDelay.reboot) { // 1 day
       this->checkForUpdate();
@@ -279,9 +279,9 @@ void GitUpdater::loop() {
 void GitUpdater::checkForUpdate() {
   if(this->status != 0) return; // If we are already checking.
   Serial.println("Check github for updates...");
-  
+
   this->status = GIT_STATUS_CHECK;
-  settings.printAvailHeap();  
+  settings.printAvailHeap();
   this->lastCheck = millis();
   if(this->checkInternet() == 0) {
     GitRepo repo;
@@ -300,7 +300,7 @@ void GitUpdater::setCurrentRelease(GitRepo &repo) {
   this->updateAvailable = false;
   for(uint8_t i = 0; i < 2; i++) {
     if(repo.releases[i].draft || repo.releases[i].preRelease || repo.releases[i].id == 0) continue;
-    // Compare the versions.  
+    // Compare the versions.
     this->latest.copy(repo.releases[i].version);
     if(repo.releases[i].version.compare(settings.fwVersion) > 0) {
       // We have a new release.
@@ -423,7 +423,7 @@ bool GitUpdater::beginUpdate(const char *version) {
   Serial.println("Begin update called...");
   if(strcmp(version, "Main") == 0)  strcpy(this->baseUrl, "https://raw.githubusercontent.com/rstrouse/ESPSomfy-RTS/master/");
   else sprintf(this->baseUrl, "https://github.com/rstrouse/ESPSomfy-RTS/releases/download/%s/", version);
-  
+
   strcpy(this->targetRelease, version);
   this->emitUpdateCheck();
   this->setFirmwareFile();
@@ -575,12 +575,12 @@ int8_t GitUpdater::downloadFile() {
         Serial.printf("Invalid HTTP Code... %d", httpCode);
         return httpCode;
       }
-    }        
+    }
     else {
       Serial.printf("Invalid HTTP Code: %d\n", httpCode);
     }
-    https.end(); 
-    sclient.stop(); 
+    https.end();
+    sclient.stop();
     Serial.printf("End update %s\n", this->currentFile);
   }
   esp_task_wdt_reset();

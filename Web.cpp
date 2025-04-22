@@ -49,8 +49,8 @@ void Web::loop() {
   apiServer.handleClient();
   delay(1);
 }
-void Web::sendCORSHeaders(WebServer &server) { 
-    //server.sendHeader(F("Connection"), F("Keep-Alive")); 
+void Web::sendCORSHeaders(WebServer &server) {
+    //server.sendHeader(F("Connection"), F("Keep-Alive"));
     //server.sendHeader(F("Keep-Alive"), F("timeout=5, max=1000"));
     //server.sendHeader(F("Access-Control-Allow-Origin"), F("*"));
     //server.sendHeader(F("Access-Control-Max-Age"), F("600"));
@@ -110,7 +110,7 @@ bool Web::createAPIToken(const char *payload, char *token) {
     mbedtls_md_type_t md_type = MBEDTLS_MD_SHA256;
     mbedtls_md_setup(&ctx, mbedtls_md_info_from_type(md_type), 1);
     mbedtls_md_hmac_starts(&ctx, (const unsigned char *)settings.serverId, strlen(settings.serverId));
-    mbedtls_md_hmac_update(&ctx, (const unsigned char *)payload, strlen(payload)); 
+    mbedtls_md_hmac_update(&ctx, (const unsigned char *)payload, strlen(payload));
     mbedtls_md_hmac_finish(&ctx, hmacResult);
     Serial.print("Hash: ");
     token[0] = '\0';
@@ -444,7 +444,7 @@ void Web::handleRepeatCommand(WebServer& server) {
       SomfyShade *shade = somfy.getShadeById(shadeId);
       if(!shade) {
         server.send(500, _encoding_json, F("{\"status\":\"ERROR\",\"desc\":\"Shade reference could not be found.\"}"));
-        return;        
+        return;
       }
       if(shade->shadeType == shade_types::garage1 && command == somfy_commands::Prog) command = somfy_commands::Toggle;
       if(!shade->isLastCommand(command)) {
@@ -465,7 +465,7 @@ void Web::handleRepeatCommand(WebServer& server) {
       SomfyGroup * group = somfy.getGroupById(groupId);
       if(!group) {
         server.send(500, _encoding_json, F("{\"status\":\"ERROR\",\"desc\":\"Group reference could not be found.\"}"));
-        return;        
+        return;
       }
       if(!group->isLastCommand(command)) {
         // We are going to send this as a new command.
@@ -479,7 +479,7 @@ void Web::handleRepeatCommand(WebServer& server) {
       group->toJSONRef(resp);
       resp.endObject();
       resp.endResponse();
-        
+
       //group->toJSON(sobj);
       //serializeJson(sdoc, g_content);
       //server.send(200, _encoding_json, g_content);
@@ -601,7 +601,7 @@ void Web::handleTiltCommand(WebServer &server) {
     }
     else {
       server.send(500, _encoding_json, F("{\"status\":\"ERROR\",\"desc\":\"Shade with the specified id not found.\"}"));
-    }  
+    }
   }
   else
     server.send(500, _encoding_json, F("{\"status\":\"ERROR\",\"desc\":\"Invalid Http method\"}"));
@@ -952,7 +952,7 @@ void Web::handleSetSensor(WebServer &server) {
     }
     else
       server.send(500, _encoding_json, F("{\"status\":\"ERROR\",\"desc\":\"An invalid shadeId was provided\"}"));
-      
+
   }
   else if(groupId != 255) {
     SomfyGroup *group = somfy.getGroupById(groupId);
@@ -990,7 +990,7 @@ void Web::handleDownloadFirmware(WebServer &server) {
         for(uint8_t i = 0; i < GIT_MAX_RELEASES; i++) {
           if(repo.releases[i].id == 0) continue;
           if(strcmp(repo.releases[i].name, server.arg("ver").c_str()) == 0) {
-            rel = &repo.releases[i];  
+            rel = &repo.releases[i];
           }
         }
       }
@@ -1061,7 +1061,7 @@ void Web::begin() {
   const char *keys[1] = {"apikey"};
   server.collectHeaders(keys, 1);
   // API Server Handlers
-  apiServer.collectHeaders(keys, 1);  
+  apiServer.collectHeaders(keys, 1);
   apiServer.enableCORS(true);
   apiServer.on("/discovery", []() { webServer.handleDiscovery(apiServer); });
   apiServer.on("/rooms", []() {webServer.handleGetRooms(apiServer); });
@@ -1082,7 +1082,7 @@ void Web::begin() {
   apiServer.on("/downloadFirmware", []() { webServer.handleDownloadFirmware(apiServer); });
   apiServer.on("/backup", []() { webServer.handleBackup(apiServer); });
   apiServer.on("/reboot", []() { webServer.handleReboot(apiServer); });
-  
+
   // Web Interface
   server.on("/tiltCommand", []() { webServer.handleTiltCommand(server); });
   server.on("/repeatCommand", []() { webServer.handleRepeatCommand(server); });
@@ -1398,7 +1398,7 @@ void Web::begin() {
         server.send(500, _encoding_json, F("{\"status\":\"ERROR\",\"desc\":\"You must supply a valid group id.\"}"));
       }
     }
-    
+
     });
   server.on("/saveRoom", []() {
     webServer.sendCORSHeaders(server);
@@ -1562,7 +1562,7 @@ void Web::begin() {
         server.send(500, _encoding_json, F("{\"status\":\"ERROR\",\"desc\":\"Shade with the specified id not found.\"}"));
       }
     }
-    else 
+    else
       server.send(500, _encoding_json, F("{\"status\":\"ERROR\",\"desc\":\"Invalid Http method\"}"));
     });
   server.on("/setRollingCode", []() {
@@ -1758,7 +1758,7 @@ void Web::begin() {
       }
     }
   });
-  
+
   server.on("/unlinkRemote", []() {
     webServer.sendCORSHeaders(server);
     if(server.method() == HTTP_OPTIONS) { server.send(200, "OK"); return; }
@@ -2168,13 +2168,13 @@ void Web::begin() {
   server.on("/scanaps", []() {
     webServer.sendCORSHeaders(server);
     esp_task_wdt_reset();
-    
+
     if(server.method() == HTTP_OPTIONS) { server.send(200, "OK"); return; }
     esp_task_wdt_delete(NULL);
     if(net.softAPOpened) WiFi.disconnect(false);
     int n = WiFi.scanNetworks(false, true);
     esp_task_wdt_add(NULL);
-    
+
     Serial.print("Scanned ");
     Serial.print(n);
     Serial.println(" networks");
@@ -2324,7 +2324,7 @@ void Web::begin() {
     webServer.sendCORSHeaders(server);
     if(server.method() == HTTP_OPTIONS) { server.send(200, "OK"); return; }
     DynamicJsonDocument doc(512);
-    
+
     Serial.print("Plain: ");
     Serial.print(server.method());
     Serial.println(server.arg("plain"));
@@ -2519,7 +2519,7 @@ void Web::begin() {
     resp.endObject();
     resp.endObject();
     resp.endResponse();
-    
+
     /*
     DynamicJsonDocument doc(2048);
     JsonObject obj = doc.to<JsonObject>();
@@ -2580,7 +2580,7 @@ void Web::begin() {
     settings.MQTT.toJSON(resp);
     resp.endObject();
     resp.endResponse();
-    
+
     /*
     DynamicJsonDocument doc(1024);
     JsonObject obj = doc.to<JsonObject>();
@@ -2681,7 +2681,7 @@ void Web::begin() {
         server.send(201, "application/json", "{\"status\":\"ERROR\",\"desc\":\"Invalid HTTP Method: \"}");
       }
     }
-  });  
+  });
   server.on("/beginFrequencyScan", []() {
     webServer.sendCORSHeaders(server);
     somfy.transceiver.beginFrequencyScan();

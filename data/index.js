@@ -290,7 +290,7 @@ function getJSONSync(url, cb) {
         }
         if (typeof overlay !== 'undefined') overlay.remove();
     };
-    
+
     xhr.onerror = (evt) => {
         let err = {
             htmlError: xhr.status || 500,
@@ -1269,8 +1269,8 @@ class Security {
 var security = new Security();
 
 class General {
-    initialized = false; 
-    appVersion = 'v2.4.7';
+    initialized = false;
+    appVersion = 'v2.4.8';
     reloadApp = false;
     init() {
         if (this.initialized) return;
@@ -2965,7 +2965,7 @@ class Somfy {
         let type = parseInt(sel.value, 10);
         document.getElementById('somfyShade').setAttribute('data-shadetype', type);
         document.getElementById('divSomfyButtons').setAttribute('data-shadetype', type);
-        
+
         let st = this.shadeTypes.find(x => x.type === type) || { type: type };
         for (let i = 0; i < this.shadeTypes.length; i++) {
             let t = this.shadeTypes[i];
@@ -2999,7 +2999,7 @@ class Somfy {
         document.getElementById('somfyShade').setAttribute('data-proto', el.value);
     }
     openEditRoom(roomId) {
-        
+
         if (typeof roomId === 'undefined') {
             document.getElementById('btnSaveRoom').innerText = 'Add Room';
             getJSONSync('/getNextRoom', (err, room) => {
@@ -3086,7 +3086,7 @@ class Somfy {
                     tilt.setAttribute('data-shadeid', shade.shadeId);
                     ico.style.setProperty('--shade-position', `${shade.flipPosition ? 100 - shade.position : shade.position}%`);
                     ico.style.setProperty('--fpos', `${shade.position}%`);
-                    
+
                     ico.style.setProperty('--tilt-position', `${shade.flipPosition ? 100 - shade.tiltPosition : shade.tiltPosition}%`);
                     //ico.style.setProperty('--shade-position', `${shade.position}%`);
                     //ico.style.setProperty('--tilt-position', `${shade.tiltPosition}%`);
@@ -3369,7 +3369,7 @@ class Somfy {
             }
             else {
                 this.setRoomsList(shades);
-                
+
             }
         });
     }
@@ -3478,7 +3478,7 @@ class Somfy {
 
                         });
                         prompt.querySelector('.sub-message').innerHTML = `<p>Press YES to delete the ${group.name} group or NO to cancel this operation.</p>`;
-                        
+
                     }
                 }
             });
@@ -3889,7 +3889,7 @@ class Somfy {
         html += '<p style="font-size:14px;">This wizard will walk you through the steps required to add shades into a group.  Follow all instructions at each step until the shade is added to the group.</p>';
         html += '<p style="font-size:14px;">During this process the shade should jog exactly two times.  The first time indicates that the motor memory has been enabled and the second time adds the group to the motor memory</p>';
         html += '<p style="font-size:14px;">Each shade must be paired individually to the group.  When you are ready to begin pairing your shade to the group press the NEXT button.</p><hr></hr>';
-       
+
         html += '</div>';
 
         html += '<div class="wizard-step" data-stepid="2">';
@@ -4225,7 +4225,7 @@ class MQTT {
     init() { this.initialized = true; }
     async loadMQTT() {
         getJSONSync('/mqttsettings', (err, settings) => {
-            if (err) 
+            if (err)
                 console.log(err);
             else {
                 console.log(settings);
@@ -4548,7 +4548,7 @@ class Firmware {
                 this.gitReleaseSelected(div);
             }
         });
-        
+
     }
     gitReleaseSelected(div) {
         let obj = ui.fromElement(div);
@@ -4770,7 +4770,7 @@ class Firmware {
             prog.style.setProperty('--progress', `${pct}%`);
             prog.setAttribute('data-progress', `${pct}%`);
             console.log(evt);
-            
+
         };
         xhr.onerror = function (err) {
             console.log(err);
@@ -4800,4 +4800,3 @@ class Firmware {
     }
 }
 var firmware = new Firmware();
-

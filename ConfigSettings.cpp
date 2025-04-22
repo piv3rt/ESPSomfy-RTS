@@ -101,7 +101,7 @@ void appver_t::toJSON(JsonSockEvent *json) {
 }
 
 bool BaseSettings::load() { return true; }
-bool BaseSettings::loadFile(const char *filename) { 
+bool BaseSettings::loadFile(const char *filename) {
   size_t filesize = 10;
   String data = "";
   if(LittleFS.exists(filename)) {
@@ -117,7 +117,7 @@ bool BaseSettings::loadFile(const char *filename) {
     this->fromJSON(obj);
     file.close();
   }
-  return false; 
+  return false;
 }
 bool BaseSettings::saveFile(const char *filename) {
   File file = LittleFS.open(filename, "w");
@@ -141,7 +141,7 @@ bool BaseSettings::parseIPAddress(JsonObject &obj, const char *prop, IPAddress *
   return true;
 }
 int BaseSettings::parseValueInt(JsonObject &obj, const char *prop, int defVal) {
-  if(obj.containsKey(prop)) return obj[prop]; 
+  if(obj.containsKey(prop)) return obj[prop];
   return defVal;
 }
 double BaseSettings::parseValueDouble(JsonObject &obj, const char *prop, double defVal) {
@@ -217,7 +217,7 @@ bool ConfigSettings::load() {
     pref.remove("hostname");
     pref.remove("ssdpBroadcast");
     pref.end();
-    this->save();    
+    this->save();
   }
   return true;
 }
@@ -275,7 +275,7 @@ void ConfigSettings::print() {
 void ConfigSettings::emitSockets() {}
 void ConfigSettings::emitSockets(uint8_t num) {}
 uint16_t ConfigSettings::calcSettingsRecSize() {
-  return strlen(this->fwVersion.name) + 3 
+  return strlen(this->fwVersion.name) + 3
     + strlen(this->hostname) + 3
     + strlen(this->NTP.ntpServer) + 3
     + strlen(this->NTP.posixZone) + 3
@@ -411,7 +411,7 @@ void NTPSettings::print() {
   Serial.println("NTP Settings ");
   Serial.print(this->ntpServer);
   Serial.print(" TZ:");
-  Serial.println(this->posixZone);  
+  Serial.println(this->posixZone);
 }
 bool NTPSettings::fromJSON(JsonObject &obj) {
   this->parseValueString(obj, "ntpServer", this->ntpServer, sizeof(this->ntpServer));
@@ -428,7 +428,7 @@ bool NTPSettings::toJSON(JsonObject &obj) {
   obj["posixZone"] = this->posixZone;
   return true;
 }
-bool NTPSettings::apply() { 
+bool NTPSettings::apply() {
   struct tm dt;
   configTime(0, 0, this->ntpServer);
   if(!getLocalTime(&dt)) return false;
@@ -457,7 +457,7 @@ bool IPSettings::toJSON(JsonObject &obj) {
   obj["subnet"] = this->subnet == ipEmpty ? "" : this->subnet.toString();
   obj["dns1"] = this->dns1 == ipEmpty ? "" : this->dns1.toString();
   obj["dns2"] = this->dns2 == ipEmpty ? "" : this->dns2.toString();
-  return true;  
+  return true;
 }
 void IPSettings::toJSON(JsonResponse &json) {
   IPAddress ipEmpty(0,0,0,0);
@@ -527,7 +527,7 @@ bool SecuritySettings::toJSON(JsonObject &obj) {
   obj["password"] = this->password;
   obj["pin"] = this->pin;
   obj["permissions"] = this->permissions;
-  return true;  
+  return true;
 }
 void SecuritySettings::toJSON(JsonResponse &json) {
   json.addElem("type", static_cast<uint8_t>(this->type));
@@ -641,7 +641,7 @@ void WifiSettings::print() {
   Serial.print(this->ssid);
   Serial.print("] PassPhrase: [");
   Serial.print(this->passphrase);
-  Serial.println("]");  
+  Serial.println("]");
 }
 void WifiSettings::printNetworks() {
   int n = WiFi.scanNetworks(false, false);
@@ -714,7 +714,7 @@ bool EthernetSettings::usesPin(uint8_t pin) {
   else if(this->PWRPin == pin) return true;
   else if(this->MDCPin == pin) return true;
   else if(this->MDIOPin == pin) return true;
-  return false;  
+  return false;
 }
 bool EthernetSettings::save() {
   pref.begin("ETH");

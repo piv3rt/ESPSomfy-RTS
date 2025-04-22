@@ -21,26 +21,26 @@ WebSocketsServer sockServer = WebSocketsServer(8080);
 static char g_response[MAX_SOCK_RESPONSE];
 
 bool room_t::isJoined(uint8_t num) {
-  for(uint8_t i = 0; i < sizeof(this->clients); i++) { 
-    if(this->clients[i] == num) return true; 
-  } 
-  return false; 
+  for(uint8_t i = 0; i < sizeof(this->clients); i++) {
+    if(this->clients[i] == num) return true;
+  }
+  return false;
 }
 bool room_t::join(uint8_t num) {
-  if(this->isJoined(num)) return true; 
-  for(uint8_t i = 0; i < sizeof(this->clients); i++) { 
-    if(this->clients[i] == 255) { 
-      this->clients[i] = num; 
-      return true; 
-    } 
+  if(this->isJoined(num)) return true;
+  for(uint8_t i = 0; i < sizeof(this->clients); i++) {
+    if(this->clients[i] == 255) {
+      this->clients[i] = num;
+      return true;
+    }
   }
-  return false;  
+  return false;
 }
-bool room_t::leave(uint8_t num) { 
-  if(!this->isJoined(num)) return false; 
-  for(uint8_t i = 0; i < sizeof(this->clients); i++) { 
-    if(this->clients[i] == num) this->clients[i] = 255; 
-  } 
+bool room_t::leave(uint8_t num) {
+  if(!this->isJoined(num)) return false;
+  for(uint8_t i = 0; i < sizeof(this->clients); i++) {
+    if(this->clients[i] == num) this->clients[i] = 255;
+  }
   return true;
 }
 void room_t::clear() {
@@ -73,7 +73,7 @@ void ClientSocketEvent::prepareMessage(const char *evt, JsonDocument &doc) {
  * SocketEmitter class members
  ********************************************************************/
 void SocketEmitter::startup() {
-  
+
 }
 void SocketEmitter::begin() {
   sockServer.begin();
@@ -84,7 +84,7 @@ void SocketEmitter::begin() {
 }
 void SocketEmitter::loop() {
   this->initClients();
-  sockServer.loop();  
+  sockServer.loop();
 }
 JsonSockEvent *SocketEmitter::beginEmit(const char *evt) {
   this->json.beginEvent(&sockServer, evt, g_response, sizeof(g_response));
@@ -129,8 +129,8 @@ void SocketEmitter::delayInit(uint8_t num) {
     }
   }
 }
-void SocketEmitter::end() { 
-  sockServer.close(); 
+void SocketEmitter::end() {
+  sockServer.close();
   for(uint8_t i = 0; i < SOCK_MAX_ROOMS; i++)
     this->rooms[i].clear();
 }
@@ -199,5 +199,5 @@ void SocketEmitter::wsEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t
             break;
         default:
             break;
-    }  
+    }
 }

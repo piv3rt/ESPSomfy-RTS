@@ -24,7 +24,7 @@ class GitRelease {
     bool hasFS = false;
     char hwVersions[128] = "";
     time_t releaseDate;
-    char name[32] = "";   
+    char name[32] = "";
     appver_t version;
     void setReleaseProperty(const char *key, const char *val);
     void setAssetProperty(const char *key, const char *val);
@@ -63,6 +63,6 @@ class GitUpdater {
     int checkInternet();
     void emitUpdateCheck(uint8_t num=255);
     void emitDownloadProgress(size_t total, size_t loaded, const char *evt = "updateProgress");
-    void emitDownloadProgress(uint8_t num, size_t total, size_t loaded, const char *evt = "updateProgress");    
+    void emitDownloadProgress(uint8_t num, size_t total, size_t loaded, const char *evt = "updateProgress");
 };
 #endif

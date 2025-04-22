@@ -18,10 +18,10 @@ time_t Timestamp::now() {
   getLocalTime(&tmNow,50);
   return mktime(&tmNow);
 }
-time_t Timestamp::getUTC() { 
+time_t Timestamp::getUTC() {
   time_t t;
   time(&t);
-  return t; 
+  return t;
 }
 time_t Timestamp::mkUTCTime(struct tm *dt) {
   time_t tsBadLocal = mktime(dt);
@@ -61,7 +61,7 @@ time_t Timestamp::parseUTCTime(const char *buff) {
     if(!isdigit(ch)) continue;
     else num[j++] = ch;
   }
-  dt.tm_mon = atoi(num)-1;  
+  dt.tm_mon = atoi(num)-1;
   memset(num, 0x00, sizeof(num));
   for(uint8_t j = 0; j < 5 && i < strlen(buff);) {
     char ch = buff[i++];
@@ -110,7 +110,7 @@ char * Timestamp::formatISO(struct tm *dt, int tz) {
   int tzHrs = floor(tz/100);
   int tzMin = tz - (tzHrs * 100);
   int ms = millis() % 1000;
-  snprintf(this->_timeBuffer, sizeof(this->_timeBuffer), "%04d-%02d-%02dT%02d:%02d:%02d.%03d%s%02d%02d", 
+  snprintf(this->_timeBuffer, sizeof(this->_timeBuffer), "%04d-%02d-%02dT%02d:%02d:%02d.%03d%s%02d%02d",
     dt->tm_year + 1900, dt->tm_mon + 1, dt->tm_mday, dt->tm_hour, dt->tm_min, dt->tm_sec, ms, tzHrs < 0 ? "-" : "+", abs(tzHrs), abs(tzMin));
   return this->_timeBuffer;
 }

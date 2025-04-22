@@ -119,7 +119,7 @@ bool ConfigFile::readString(char *buff, size_t len) {
         return true;
       }
     }
-    else 
+    else
       return false;
   }
   _rtrim(buff);
@@ -177,7 +177,7 @@ bool ConfigFile::readVarString(char *buff, size_t len) {
         return true;
       }
     }
-    else 
+    else
       return false;
   }
   _rtrim(buff);
@@ -221,17 +221,17 @@ bool ConfigFile::writeInt8(const int8_t val, const char tok) {
 bool ConfigFile::writeUInt8(const uint8_t val, const char tok) {
   char buff[4];
   snprintf(buff, sizeof(buff), "%3u", val);
-  return this->writeString(buff, sizeof(buff), tok); 
+  return this->writeString(buff, sizeof(buff), tok);
 }
 bool ConfigFile::writeUInt16(const uint16_t val, const char tok) {
   char buff[6];
   snprintf(buff, sizeof(buff), "%5u", val);
-  return this->writeString(buff, sizeof(buff), tok); 
+  return this->writeString(buff, sizeof(buff), tok);
 }
 bool ConfigFile::writeUInt32(const uint32_t val, const char tok) {
   char buff[11];
   snprintf(buff, sizeof(buff), "%10u", val);
-  return this->writeString(buff, sizeof(buff), tok); 
+  return this->writeString(buff, sizeof(buff), tok);
 }
 bool ConfigFile::writeFloat(const float val, const uint8_t prec, const char tok) {
   char buff[20];
@@ -284,8 +284,8 @@ bool ConfigFile::readBool(const bool defVal) {
       case 'T':
       case '1':
         return true;
-      default: 
-        return false;    
+      default:
+        return false;
     }
   }
   return defVal;
@@ -411,7 +411,7 @@ bool ShadeConfigFile::validate() {
       Serial.print("Invalid Group Record Count:");
       Serial.println(this->header.groupRecords);
       return false;
-      
+
     }
     */
   }
@@ -419,7 +419,7 @@ bool ShadeConfigFile::validate() {
     Serial.printf("File not positioned at %u end of header: %d\n", this->header.length, this->file.position());
     return false;
   }
-  
+
   // We should know the file size based upon the record information in the header
   uint32_t fsize = this->header.length + (this->header.shadeRecordSize * this->header.shadeRecords);
   if(this->header.version > 10) fsize += (this->header.groupRecordSize * this->header.groupRecords);
@@ -488,11 +488,11 @@ bool ShadeConfigFile::validate() {
         Serial.printf("Failed to find the repeater record end %d\n", recs);
       }
       recs++;
-      
+
     }
   }
   this->file.seek(startPos, SeekSet);
-  return true;  
+  return true;
 }
 bool ShadeConfigFile::load(SomfyShadeController *s, const char *filename) {
   ShadeConfigFile file;
@@ -692,14 +692,14 @@ bool ShadeConfigFile::readTransRecord(transceiver_config_t &cfg) {
     cfg.frequency = this->readFloat(cfg.frequency);
     cfg.rxBandwidth = this->readFloat(cfg.rxBandwidth);
     cfg.deviation = this->readFloat(cfg.deviation);
-    cfg.txPower = this->readInt8(cfg.txPower);  
+    cfg.txPower = this->readInt8(cfg.txPower);
     if(this->file.position() != startPos + this->header.transRecordSize) {
       Serial.println("Reading to end of transceiver record");
       this->seekChar(CFG_REC_END);
     }
-    
+
   }
-  return true; 
+  return true;
 }
 bool ShadeConfigFile::readSettingsRecord() {
   if(this->header.settingsRecordSize > 0) {
@@ -739,7 +739,7 @@ bool ShadeConfigFile::readGroupRecord(SomfyGroup *group) {
   if(this->header.version >= 12) group->repeats = this->readUInt8(1);
   if(this->header.version >= 13) group->sortOrder = this->readUInt8(group->getGroupId() - 1);
   else group->sortOrder = group->getGroupId() - 1;
-  
+
   if(group->getGroupId() == 255) group->clear();
   else group->compressLinkedShadeIds();
   if(this->header.version >= 18) group->flipCommands = this->readBool(false);
@@ -750,7 +750,7 @@ bool ShadeConfigFile::readGroupRecord(SomfyGroup *group) {
     group->lastRollingCode = max(rc, group->lastRollingCode);
     if(rc < group->lastRollingCode) pref.putUShort(group->getRemotePrefId(), group->lastRollingCode);
   }
-  
+
   pref.end();
   if(this->file.position() != startPos + this->header.groupRecordSize) {
     Serial.println("Reading to end of group record");
@@ -760,9 +760,9 @@ bool ShadeConfigFile::readGroupRecord(SomfyGroup *group) {
 }
 bool ShadeConfigFile::readRepeaterRecord(SomfyShadeController *s) {
   uint32_t startPos = this->file.position();
-  
+
   for(uint8_t i = 0; i < SOMFY_MAX_REPEATERS; i++) {
-    s->linkRepeater(this->readUInt32(0));  
+    s->linkRepeater(this->readUInt32(0));
   }
   if(this->file.position() != startPos + this->header.repeaterRecordSize) {
     Serial.println("Reading to end of repeater record");
@@ -889,7 +889,7 @@ bool ShadeConfigFile::loadFile(SomfyShadeController *s, const char *filename) {
       ((SomfyRoom *)&s->rooms[ndx++])->clear();
     }
   }
-  
+
   // We should be valid so start reading.
   for(uint8_t i = 0; i < this->header.shadeRecords; i++) {
     this->readShadeRecord(&s->shades[i]);
@@ -998,7 +998,7 @@ bool ShadeConfigFile::writeShadeRecord(SomfyShade *shade) {
   this->writeUInt8(shade->gpioMy);
   this->writeUInt8(shade->gpioFlags);
   this->writeUInt8(shade->roomId, CFG_REC_END);
-  return true;  
+  return true;
 }
 bool ShadeConfigFile::writeSettingsRecord() {
   this->writeVarString(settings.fwVersion.name);
@@ -1011,7 +1011,7 @@ bool ShadeConfigFile::writeSettingsRecord() {
 }
 bool ShadeConfigFile::writeNetRecord() {
   this->writeUInt8(static_cast<uint8_t>(settings.connType));
-  this->writeBool(settings.IP.dhcp); 
+  this->writeBool(settings.IP.dhcp);
   this->writeVarString(settings.IP.ip.toString().c_str());
   this->writeVarString(settings.IP.gateway.toString().c_str());
   this->writeVarString(settings.IP.subnet.toString().c_str());

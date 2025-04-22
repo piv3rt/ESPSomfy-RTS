@@ -257,11 +257,11 @@ class SomfyRemote {
     virtual uint16_t p_lastRollingCode(uint16_t code);
     somfy_commands transformCommand(somfy_commands cmd);
     virtual void triggerGPIOs(somfy_frame_t &frame);
-   
+
 };
 class SomfyLinkedRemote : public SomfyRemote {
   public:
-    SomfyLinkedRemote();    
+    SomfyLinkedRemote();
 };
 class SomfyShade : public SomfyRemote {
   protected:
@@ -307,7 +307,7 @@ class SomfyShade : public SomfyRemote {
     void toJSONRef(JsonResponse &json);
     int8_t fromJSON(JsonObject &obj);
     void toJSON(JsonResponse &json) override;
-    
+
     char name[21] = "";
     void setShadeId(uint8_t id) { shadeId = id; }
     uint8_t getShadeId() { return shadeId; }
@@ -395,7 +395,7 @@ class SomfyGroup : public SomfyRemote {
     //bool toJSON(JsonObject &obj);
     void toJSON(JsonResponse &json);
     void toJSONRef(JsonResponse &json);
-    
+
     bool linkShade(uint8_t shadeId);
     bool unlinkShade(uint8_t shadeId);
     bool hasShadeId(uint8_t shadeId);
@@ -433,18 +433,18 @@ struct transceiver_config_t {
     float deviation = 47.60;          // Set the Frequency deviation in kHz. Value from 1.58 to 380.85. Default is 47.60 kHz.
     float rxBandwidth = 99.97;        // Receive bandwidth in kHz.  Value from 58.03 to 812.50.  Default is 99.97kHz.
     int8_t txPower = 10;              // Transmission power {-30, -20, -15, -10, -6, 0, 5, 7, 10, 11, 12}.  Default is 12.
-/*    
+/*
     bool internalCCMode = false;      // Use internal transmission mode FIFO buffers.
     byte modulationMode = 2;          // Modulation mode. 0 = 2-FSK, 1 = GFSK, 2 = ASK/OOK, 3 = 4-FSK, 4 = MSK.
     uint8_t channel = 0;              // The channel number from 0 to 255
     float channelSpacing = 199.95;    // Channel spacing in multiplied by the channel number and added to the base frequency in kHz. 25.39 to 405.45.  Default 199.95
     float dataRate = 99.97;           // The data rate in kBaud.  0.02 to 1621.83 Default is 99.97.
-    uint8_t syncMode = 0;             // 0=No preamble/sync, 
-    // 1=16 sync word bits detected, 
-    // 2=16/16 sync words bits detected. 
-    // 3=30/32 sync word bits detected, 
+    uint8_t syncMode = 0;             // 0=No preamble/sync,
+    // 1=16 sync word bits detected,
+    // 2=16/16 sync words bits detected.
+    // 3=30/32 sync word bits detected,
     // 4=No preamble/sync carrier above threshold
-    // 5=15/16 + carrier above threshold. 
+    // 5=15/16 + carrier above threshold.
     // 6=16/16 + carrier-sense above threshold
     // 7=0/32 + carrier-sense above threshold
     uint16_t syncWordHigh = 211;      // The sync word used to the sync mode.
@@ -479,7 +479,7 @@ struct transceiver_config_t {
     // 6=16bytes
     // 7=24bytes
     uint8_t pqtThreshold = 0;         // Preamble quality estimator threshold.  The preable quality estimator increase an internal counter by one each time a bit is received that is different than the prevoius bit and
-    // decreases the bounter by 8 each time a bit is received that is the same as the lats bit.  A threshold of 4 PQT for this counter is used to gate sync word detection.  
+    // decreases the bounter by 8 each time a bit is received that is the same as the lats bit.  A threshold of 4 PQT for this counter is used to gate sync word detection.
     // When PQT = 0 a sync word is always accepted.
     bool appendStatus = false;        // Appends the RSSI and LQI values to the TX packed as well as the CRC.
  */
