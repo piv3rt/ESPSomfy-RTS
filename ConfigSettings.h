@@ -86,7 +86,7 @@ class WifiSettings: BaseSettings {
     bool save();
     bool load();
     void print();
-    
+
 };
 class EthernetSettings: BaseSettings {
   public:
@@ -98,7 +98,7 @@ class EthernetSettings: BaseSettings {
     int8_t PWRPin = ETH_PHY_POWER;
     int8_t MDCPin = ETH_PHY_MDC;
     int8_t MDIOPin = ETH_PHY_MDIO;
-    
+
     bool begin();
     bool fromJSON(JsonObject &obj);
     bool toJSON(JsonObject &obj);

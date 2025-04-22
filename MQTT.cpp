@@ -54,7 +54,7 @@ void MQTTClass::receive(const char *topic, byte*payload, uint32_t length) {
 
   // We need to start at the last slash in the data
   uint8_t len = strlen(topic);
-  
+
   uint8_t slashes = 0;
   uint16_t ndx = strlen(topic) - 1;
   while(ndx > 0) {
@@ -96,7 +96,7 @@ void MQTTClass::receive(const char *topic, byte*payload, uint32_t length) {
   }
   for(uint8_t j = 0; j < length && j < sizeof(value); j++)
     value[j] = payload[j];
-  
+
   Serial.print("MQTT type:[");
   Serial.print(entityType);
   Serial.print("] command:[");
@@ -194,7 +194,7 @@ bool MQTTClass::connect() {
       return true;
   }
   if(settings.MQTT.enabled && !this->suspended) {
-    if(this->lastConnect + 10000 > millis()) return false;    
+    if(this->lastConnect + 10000 > millis()) return false;
     uint64_t mac = ESP.getEfuseMac();
     snprintf(this->clientId, sizeof(this->clientId), "client-%08x%08x", (uint32_t)((mac >> 32) & 0xFFFFFFFF), (uint32_t)(mac & 0xFFFFFFFF));
     if(strlen(settings.MQTT.protocol) > 0 && strlen(settings.MQTT.hostname) > 0) {
@@ -334,7 +334,7 @@ bool MQTTClass::publishBuffer(const char *topic, uint8_t *data, uint16_t len, bo
   uint16_t buff_len;
   esp_task_wdt_reset(); // Make sure we do not reboot here.
   mqttClient.beginPublish(topic, len, retain);
-  do { 
+  do {
     buff_len = to_write;
     if(buff_len > 128) buff_len = 128;
     res = mqttClient.write(data+offset, buff_len);

@@ -606,7 +606,7 @@ i.icss-window-shade {
     i.icss-window-shade:after {
         width: calc(100% - .05em);
         height: var(--shade-position, 0%);
-        
+
         left: 0.025em;
         top: 0.025em;
         border-bottom: solid 0.025em gray;
@@ -995,7 +995,7 @@ i.icss-awning {
         left: -.04em;
         top: 0.025em;
         border-bottom: solid 0.045em gray;
-        background-image: repeating-linear-gradient(90deg, var(--shade-color, currentColor), var(--shade-color, currentColor) calc(25% - 4px), black calc(25% - 2px), var(--shade-color, currentColor) calc(25% - 2px)); 
+        background-image: repeating-linear-gradient(90deg, var(--shade-color, currentColor), var(--shade-color, currentColor) calc(25% - 4px), black calc(25% - 2px), var(--shade-color, currentColor) calc(25% - 2px));
         background-color: rgba(71, 212, 255, 0);
     }
 i.icss-sun-c {

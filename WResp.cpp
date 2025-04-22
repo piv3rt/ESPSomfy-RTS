@@ -145,7 +145,7 @@ void JsonFormatter::_safecat(const char *val, bool escape) {
   else strcat(this->buff, val);
   if(escape) strcat(this->buff, "\"");
 }
-void JsonFormatter::_appendNumber(const char *name) { this->appendElem(name); this->_safecat(this->_numbuff); } 
+void JsonFormatter::_appendNumber(const char *name) { this->appendElem(name); this->_safecat(this->_numbuff); }
 uint32_t JsonFormatter::calcEscapedLength(const char *raw) {
   uint32_t len = 0;
   for(size_t i = strlen(raw); i > 0; i--) {

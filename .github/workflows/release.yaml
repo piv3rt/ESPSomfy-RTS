@@ -1,6 +1,6 @@
 name: ESPSomfy-RTS Release
 
-on: 
+on:
   release:
     types: [published]
 
@@ -197,4 +197,3 @@ jobs:
           asset_path: ${{ matrix.obname }}.zip
           overwrite: true
           asset_content_type: application/zip
-          

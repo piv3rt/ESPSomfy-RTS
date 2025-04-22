@@ -34,7 +34,7 @@ void setup() {
   webServer.startup();
   webServer.begin();
   delay(1000);
-  net.setup();  
+  net.setup();
   somfy.begin();
   //git.checkForUpdate();
   esp_task_wdt_init(7, true); //enable panic so ESP32 restarts
@@ -54,7 +54,7 @@ void loop() {
     return;
   }
   uint32_t timing = millis();
-  
+
   net.loop();
   if(millis() - timing > 100) Serial.printf("Timing Net: %ldms\n", millis() - timing);
   timing = millis();

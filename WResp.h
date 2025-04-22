@@ -37,7 +37,7 @@ class JsonFormatter {
     void addElem(int32_t lval);
     void addElem(uint32_t lval);
     void addElem(bool bval);
-    
+
     void addElem(const char* name, float fval);
     void addElem(const char* name, int8_t nval);
     void addElem(const char* name, uint8_t nval);

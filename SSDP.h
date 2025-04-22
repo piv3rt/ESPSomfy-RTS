@@ -138,7 +138,7 @@ class SSDPClass {
     void _printPacket(ssdp_packet_t *pkt);
     bool _startsWith(const char* pre, const char* str);
     void _addToSendQueue(IPAddress addr, uint16_t port, UPNPDeviceType *d, const char *st, response_types_t responseType, uint8_t sec);
-   
+
   public:
     SSDPClass();
     ~SSDPClass();
