@@ -1500,7 +1500,8 @@ class General {
                     d1: security.pin[1],
                     d2: security.pin[2],
                     d3: security.pin[3]
-                }
+                },
+                fallbackToSoftAP: security.fallbackToSoftAP
             }
         };
         ui.toElement(document.getElementById('divSecurityOptions'), obj);
@@ -1547,6 +1548,7 @@ class General {
             sec.pin += security.pin[`d${i}`];
         }
         sec.permissions |= security.permissions.configOnly ? 0x01 : 0x00;
+        sec.fallbackToSoftAP = security.fallbackToSoftAP;
         let confirm = '';
         console.log(sec);
         if (security.type === 1) { // Pin Entry
@@ -1585,6 +1587,9 @@ class General {
                 return;
             }
             confirm = '<p>Please keep your password safe and above all remember it.  The only way to recover a password is to completely reload the onboarding firmware which will wipe out your configuration.</p><p>Have you stored your username and password in a safe place?</p>';
+        }
+        if (!security.fallbackToSoftAP) {
+            confirm += '<p>You\'re about to disable Access Point (AP) mode. While this improves security, you won\'t be able to access ESPSomfy-RTS in the event of a network outage and will have to completely reload the onboarding firmware which will wipe out your configuration.</p><p>Are you sure this is what you want to do?</p>';
         }
         let prompt = ui.promptMessage('Confirm Security', () => {
             putJSONSync('/saveSecurity', sec, (err, objApiKey) => {
