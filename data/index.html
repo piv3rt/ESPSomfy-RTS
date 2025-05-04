@@ -215,6 +215,10 @@
                                 <label for="fldRenterPassword">Re-enter Password</label>
                             </div>
                         </div>
+                        <div class="field-group">
+                            <input id="cbFallbackToSoftAP" data-bind="security.fallbackToSoftAP" type="checkbox" style="display:inline-block;" />
+                            <label for="cbFallbackToSoftAP" style="display:inline-block;cursor:pointer;" title="When ESPSomfy-RTS can't connect to a network, spawn an access point (AP). Disable to improve security.">Fallback to Access Point (AP) mode</label>
+                        </div>
                         <div class="button-container">
                             <button id="btnLogin" type="button" value="Submit" onclick="general.saveSecurity();">
                                 Save Security

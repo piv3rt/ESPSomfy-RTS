@@ -140,6 +140,7 @@ class SecuritySettings: BaseSettings {
     char password[33] = "";
     char pin[5] = "";
     uint8_t permissions = 0;
+    bool fallbackToSoftAP = true;
     bool begin();
     bool save();
     bool load();

@@ -519,6 +519,7 @@ bool SecuritySettings::fromJSON(JsonObject &obj) {
   this->parseValueString(obj, "password", this->password, sizeof(this->password));
   this->parseValueString(obj, "pin", this->pin, sizeof(this->pin));
   if(obj.containsKey("permissions")) this->permissions = obj["permissions"];
+  if(obj.containsKey("fallbackToSoftAP")) this->fallbackToSoftAP = obj["fallbackToSoftAP"];
   return true;
 }
 bool SecuritySettings::toJSON(JsonObject &obj) {
@@ -527,6 +528,7 @@ bool SecuritySettings::toJSON(JsonObject &obj) {
   obj["password"] = this->password;
   obj["pin"] = this->pin;
   obj["permissions"] = this->permissions;
+  obj["fallbackToSoftAP"] = this->fallbackToSoftAP;
   return true;
 }
 void SecuritySettings::toJSON(JsonResponse &json) {
@@ -535,6 +537,7 @@ void SecuritySettings::toJSON(JsonResponse &json) {
   json.addElem("password", this->password);
   json.addElem("pin", this->pin);
   json.addElem("permissions", this->permissions);
+  json.addElem("fallbackToSoftAP", this->fallbackToSoftAP);
 }
 
 bool SecuritySettings::save() {
@@ -545,6 +548,7 @@ bool SecuritySettings::save() {
   pref.putString("password", this->password);
   pref.putString("pin", this->pin);
   pref.putChar("permissions", this->permissions);
+  pref.putBool("fallback", this->fallbackToSoftAP);
   pref.end();
   return true;
 }
@@ -555,6 +559,7 @@ bool SecuritySettings::load() {
   if(pref.isKey("password")) pref.getString("password", this->password, sizeof(this->password));
   if(pref.isKey("pin")) pref.getString("pin", this->pin, sizeof(this->pin));
   if(pref.isKey("permissions")) this->permissions = pref.getChar("permissions", this->permissions);
+  if(pref.isKey("fallback")) this->fallbackToSoftAP = pref.getBool("fallback", this->fallbackToSoftAP);
   pref.end();
   return true;
 }
@@ -568,7 +573,9 @@ void SecuritySettings::print() {
   Serial.print("] Pin:[");
   Serial.print(this->pin);
   Serial.print("] Permissions:");
-  Serial.println(this->permissions);
+  Serial.print(this->permissions);
+  Serial.print(" Fallback to SoftAP:");
+  Serial.println(this->fallbackToSoftAP ? "Yes" : "No");
 }
 
 WifiSettings::WifiSettings() {}

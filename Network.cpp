@@ -523,12 +523,17 @@ bool Network::connect(conn_types_t ctype) {
   }
   else if(ctype == conn_types_t::ap || (!this->connected() && millis() > this->disconnectTime + CONNECT_TIMEOUT)) {
     if(!this->softAPOpened && !this->openingSoftAP) {
-      this->disconnectTime = millis();
-      this->openSoftAP();
+      if (ctype == conn_types_t::ap || settings.Security.fallbackToSoftAP) {
+        this->disconnectTime = millis();
+        this->openSoftAP();
+      } else {
+        // When fallbackToSoftAP is disabled, we need to try reconnecting to the configured network, even if it fails
+        this->connectWiFi();
+      }
     }
     else if(this->softAPOpened && !this->openingSoftAP &&
       (ctype == conn_types_t::wifi && this->connType != conn_types_t::wifi && settings.WIFI.hidden)) {
-      // When thge softAP is open then we need to try to connect to wifi repeatedly if the user connects to a hidden SSID.
+      // When the softAP is open then we need to try to connect to wifi repeatedly if the user connects to a hidden SSID.
       this->connectWiFi();
     }
   }

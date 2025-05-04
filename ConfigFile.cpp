@@ -7,7 +7,7 @@
 
 extern Preferences pref;
 
-#define SHADE_HDR_VER 24
+#define SHADE_HDR_VER 25
 #define SHADE_HDR_SIZE 76
 #define SHADE_REC_SIZE 276
 #define GROUP_REC_SIZE 200
@@ -712,6 +712,7 @@ bool ShadeConfigFile::readSettingsRecord() {
     this->readVarString(settings.NTP.posixZone, sizeof(settings.NTP.posixZone));
     settings.ssdpBroadcast = this->readBool(false);
     if(this->header.version >= 20) settings.checkForUpdate = this->readBool(true);
+    if(this->header.version >= 25) settings.Security.fallbackToSoftAP = this->readBool(true);
     if(this->file.position() != startPos + this->header.settingsRecordSize) {
       Serial.println("Reading to end of settings record");
       this->seekChar(CFG_REC_END);
@@ -1006,7 +1007,8 @@ bool ShadeConfigFile::writeSettingsRecord() {
   this->writeVarString(settings.NTP.ntpServer);
   this->writeVarString(settings.NTP.posixZone);
   this->writeBool(settings.ssdpBroadcast);
-  this->writeBool(settings.checkForUpdate, CFG_REC_END);
+  this->writeBool(settings.checkForUpdate);
+  this->writeBool(settings.Security.fallbackToSoftAP, CFG_REC_END);
   return true;
 }
 bool ShadeConfigFile::writeNetRecord() {
