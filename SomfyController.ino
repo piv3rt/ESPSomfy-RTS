@@ -18,9 +18,16 @@ rebootDelay_t rebootDelay;
 SomfyShadeController somfy;
 MQTTClass mqtt;
 GitUpdater git;
+bool recovery = false;
+
+void IRAM_ATTR recoveryMode() {
+  recovery = true;
+  Serial.println("Entering recovery mode!");
+}
 
 uint32_t oldheap = 0;
 void setup() {
+  attachInterrupt(0, recoveryMode, FALLING); // Start recovery mode if GPIO0 (BOOT) is pressed during boot
   Serial.begin(115200);
   Serial.println();
   Serial.println("Startup/Boot....");
@@ -39,7 +46,7 @@ void setup() {
   //git.checkForUpdate();
   esp_task_wdt_init(7, true); //enable panic so ESP32 restarts
   esp_task_wdt_add(NULL); //add current thread to WDT watch
-
+  detachInterrupt(0);
 }
 
 void loop() {

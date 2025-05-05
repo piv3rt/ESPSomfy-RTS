@@ -17,6 +17,7 @@ extern MQTTClass mqtt;
 extern rebootDelay_t rebootDelay;
 extern Network net;
 extern SomfyShadeController somfy;
+extern bool recovery;
 
 static unsigned long _lastHeapEmit = 0;
 
@@ -82,6 +83,7 @@ void Network::loop() {
   conn_types_t ctype = this->preferredConnType();
   this->connect(ctype); // Connection timeout handled in connect function as well as the opening of the Soft AP if needed.
   if(this->connecting()) return; // If we are currently attempting to connect to something then we need to bail here.
+  if(recovery) return; // We are in recovery mode
   if(_apScanning) {
     if(settings.WIFI.hidden ||                                    // This user has elected to use a hidden AP.
       (this->connected() && !settings.WIFI.roaming) ||            // We are already connected and should not be roaming.
@@ -517,6 +519,12 @@ bool Network::connect(conn_types_t ctype) {
   esp_task_wdt_reset();
   if(this->connecting()) return true;
   if(this->disconnectTime == 0) this->disconnectTime = millis();
+  if(recovery) {
+    if (!this->softAPOpened && !this->openingSoftAP) {
+      this->openSoftAP();
+    }
+    return true;
+  }
   if(ctype == conn_types_t::ethernet && this->connType != conn_types_t::ethernet) {
     // Here we need to call the connect to ethernet.
     this->connectWired();
