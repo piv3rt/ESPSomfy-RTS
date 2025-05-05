@@ -82,6 +82,13 @@ jobs:
             chip: ESP32-S3
             fqbn: esp32:esp32:lolin_s3_mini
             name: LOLIN-S3-mini
+            flags: "-D STATUSLED_PIN=47"
+          - board: lolin_s3_mini
+            addr_bootloader: 0x0
+            chip: ESP32-S3
+            fqbn: esp32:esp32:lolin_s3_mini
+            name: S3-Super-Mini
+            flags: "-D STATUSLED_PIN=48"
 
     steps:
       - name: Check out code
@@ -128,7 +135,7 @@ jobs:
       - name: Build ${{ matrix.name }}
         run: |
           mkdir -p build
-          arduino-cli compile --clean --output-dir build --fqbn ${{ matrix.fqbn }} --warnings default ./SomfyController
+          arduino-cli compile --clean --output-dir build --fqbn ${{ matrix.fqbn }} --build-property "compiler.cpp.extra_flags=\"${{ matrix.flags }}\"" --warnings default ./SomfyController
 
       - name: ${{ matrix.name }} Image
         run: |
