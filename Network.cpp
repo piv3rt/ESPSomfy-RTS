@@ -17,6 +17,7 @@ extern MQTTClass mqtt;
 extern rebootDelay_t rebootDelay;
 extern Network net;
 extern SomfyShadeController somfy;
+extern bool recovery;
 
 static unsigned long _lastHeapEmit = 0;
 
@@ -517,7 +518,10 @@ bool Network::connect(conn_types_t ctype) {
   esp_task_wdt_reset();
   if(this->connecting()) return true;
   if(this->disconnectTime == 0) this->disconnectTime = millis();
-  if(ctype == conn_types_t::ethernet && this->connType != conn_types_t::ethernet) {
+  if(recovery && !this->softAPOpened && !this->openingSoftAP) {
+    this->openSoftAP();
+  }
+  else if(ctype == conn_types_t::ethernet && this->connType != conn_types_t::ethernet) {
     // Here we need to call the connect to ethernet.
     this->connectWired();
   }
