@@ -9,6 +9,7 @@
 #include "Utils.h"
 #include "SSDP.h"
 #include "MQTT.h"
+#include "StatusLed.h"
 
 extern ConfigSettings settings;
 extern Web webServer;
@@ -257,6 +258,8 @@ void Network::setConnected(conn_types_t connType) {
   if(this->connectAttempts == 1) {
     Serial.println();
     if(this->connType == conn_types_t::wifi) {
+      setStatusLed(0x00, 0x80, 0x00); // Green
+      fadeToBlack(10000); // 10 seconds
       Serial.print("Successfully Connected to WiFi!!!!");
       Serial.print(WiFi.localIP());
       Serial.print(" (");
@@ -271,6 +274,8 @@ void Network::setConnected(conn_types_t connType) {
       }
     }
     else {
+      setStatusLed(0x00, 0x80, 0x00); // Green
+      fadeToBlack(10000); // 10 seconds
       Serial.print("Successfully Connected to Ethernet!!! ");
       Serial.print(ETH.localIP());
       if(ETH.fullDuplex()) {
@@ -298,6 +303,8 @@ void Network::setConnected(conn_types_t connType) {
     }
   }
   else {
+    setStatusLed(0x00, 0x80, 0x00); // Green
+    fadeToBlack(10000); // 10 seconds
     Serial.println();
     Serial.print("Reconnected after ");
     Serial.print(1.0 * (millis() - this->connectStart)/1000);
@@ -584,6 +591,8 @@ bool Network::openSoftAP() {
   if(this->softAPOpened || this->openingSoftAP) return true;
   if(this->connected()) WiFi.disconnect(false);
   this->openingSoftAP = true;
+  setStatusLed(0x80, 0x00, 0x80); // Purple
+  blinkStatusLed(200);
   Serial.println();
   Serial.println("Turning the HotSpot On");
   esp_task_wdt_reset(); // Make sure we do not reboot here.
@@ -619,6 +628,7 @@ void Network::networkEvent(WiFiEvent_t event) {
     case ARDUINO_EVENT_WIFI_STA_STOP:            Serial.println("(evt) WiFi clients stopped"); break;
     case ARDUINO_EVENT_WIFI_STA_CONNECTED:       Serial.println("(evt) Connected to WiFi STA access point"); break;
     case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
+      setStatusLed(0xff, 0x00, 0x00); // Red
       Serial.printf("(evt) Disconnected from WiFi STA access point. Connecting: %d\n", net.connecting());
       net.connType = conn_types_t::unset;
       net.disconnectTime = millis();

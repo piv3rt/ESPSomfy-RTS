@@ -10,6 +10,7 @@ env:
   ESPTOOL_VERSION: "4.6"
   LITTLEFS_VERSION: "v2.5.1"
   MKLITTLEFS_VERSION: "3.1.0"
+  NEOPIXEL_VERSION: "1.12.5"
   PUB_SUB_CLIENT_VERSION: "2.8.0"
   PYTHON_VERSION: "3.10"
   SMARTRC_CC1101_VERSION: "2.5.7"
@@ -82,6 +83,12 @@ jobs:
             chip: ESP32-S3
             fqbn: esp32:esp32:lolin_s3_mini
             name: LOLIN-S3-mini
+          - board: lolin_s3_mini
+            addr_bootloader: 0x0
+            chip: ESP32-S3
+            fqbn: esp32:esp32:lolin_s3_mini
+            name: S3-Super-Mini
+            flags: "-D STATUSLED_PIN=48"
 
     steps:
       - name: Check out code
@@ -120,6 +127,7 @@ jobs:
 
       - name: Configure Arduino Libraries
         run: |
+          arduino-cli lib install 'Adafruit NeoPixel@${{ env.NEOPIXEL_VERSION }}'
           arduino-cli lib install ArduinoJson@${{ env.ARDUINO_JSON_VERSION }}
           arduino-cli lib install PubSubClient@${{ env.PUB_SUB_CLIENT_VERSION }}
           arduino-cli lib install SmartRC-CC1101-Driver-Lib@${{ env.SMARTRC_CC1101_VERSION }}
@@ -128,7 +136,7 @@ jobs:
       - name: Build ${{ matrix.name }}
         run: |
           mkdir -p build
-          arduino-cli compile --clean --output-dir build --fqbn ${{ matrix.fqbn }} --warnings default ./SomfyController
+          arduino-cli compile --clean --output-dir build --fqbn ${{ matrix.fqbn }} --build-property "compiler.cpp.extra_flags=\"${{ matrix.flags }}\"" --warnings default ./SomfyController
 
       - name: ${{ matrix.name }} Image
         run: |

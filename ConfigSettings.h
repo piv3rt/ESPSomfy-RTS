@@ -4,6 +4,13 @@
 #define configsettings_h
 #include "WResp.h"
 #define FW_VERSION "v2.4.7"
+
+#if defined(STATUSLED_PIN)
+#define DEFAULT_STATUSLED_PIN STATUSLED_PIN
+#else
+#define DEFAULT_STATUSLED_PIN 0
+#endif
+
 enum class conn_types_t : byte {
     unset = 0x00,
     wifi = 0x01,
@@ -179,6 +186,7 @@ class ConfigSettings: BaseSettings {
     bool ssdpBroadcast = true;
     bool checkForUpdate = true;
     uint8_t status;
+    uint8_t statusLedPin = DEFAULT_STATUSLED_PIN;
     IPSettings IP;
     WifiSettings WIFI;
     EthernetSettings Ethernet;

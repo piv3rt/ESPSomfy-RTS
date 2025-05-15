@@ -1964,6 +1964,7 @@ class Somfy {
         this.loadPins('out', document.getElementById('selShadeGPIOUp'));
         this.loadPins('out', document.getElementById('selShadeGPIODown'));
         this.loadPins('out', document.getElementById('selShadeGPIOMy'));
+        this.loadPins('outdis', document.getElementById('selStatusLedPin'));
     }
     async loadSomfy() {
         getJSONSync('/controller', (err, somfy) => {
@@ -2812,6 +2813,10 @@ class Somfy {
         let pm = this.pinMaps.find(x => x.name === cm) || { name: '', maxPins: 39, inputs: [0, 1, 6, 7, 8, 9, 10, 11, 37, 38], outputs: [3, 6, 7, 8, 9, 10, 11, 34, 35, 36, 37, 38, 39] };
         //console.log({ cm: cm, pm: pm });
         for (let i = 0; i <= pm.maxPins; i++) {
+            if (i == 0 && type == "outdis") {
+                sel.options[0] = new Option('Disabled', 0, true);
+                continue;
+            }
             if (type.includes('in') && pm.inputs.includes(i)) continue;
             if (type.includes('out') && pm.outputs.includes(i)) continue;
             sel.options[sel.options.length] = new Option(`GPIO-${i > 9 ? i.toString() : '0' + i.toString()}`, i, typeof opt !== 'undefined' && opt === i);
