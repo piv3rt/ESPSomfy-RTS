@@ -3,7 +3,7 @@
 #ifndef configsettings_h
 #define configsettings_h
 #include "WResp.h"
-#define FW_VERSION "v2.4.7"
+#define FW_VERSION "v2.4.8"
 
 #if defined(STATUSLED_PIN)
 #define DEFAULT_STATUSLED_PIN STATUSLED_PIN
