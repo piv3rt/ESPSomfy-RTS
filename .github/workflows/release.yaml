@@ -12,6 +12,7 @@ env:
   ESPTOOL_VERSION: "4.7"
   LITTLEFS_VERSION: "v2.5.1"
   MKLITTLEFS_VERSION: "3.1.0"
+  NEOPIXEL_VERSION: "1.12.5"
   PUB_SUB_CLIENT_VERSION: "2.8.0"
   PYTHON_VERSION: "3.10"
   SMARTRC_CC1101_VERSION: "2.5.7"
@@ -112,6 +113,24 @@ jobs:
             name: ESP32S3
             fwname: SomfyController.ino.esp32s3.bin
             obname: SomfyController.onboard.esp32s3.bin
+          - board: esp32s3
+            addr_bootloader: 0x0
+            chip: ESP32-S3
+            fqbn: esp32:esp32:esp32s3:JTAGAdapter=default,PSRAM=disabled,FlashMode=qio,FlashSize=4M,LoopCore=1,EventsCore=1,USBMode=hwcdc,CDCOnBoot=cdc,MSCOnBoot=default,DFUOnBoot=default,UploadMode=default,PartitionScheme=default,CPUFreq=240,UploadSpeed=921600,DebugLevel=none,EraseFlash=none
+            #     esp32:esp32:esp32s3:JTAGAdapter=default,PSRAM=disabled,FlashMode=qio,FlashSize=4M,LoopCore=1,EventsCore=1,USBMode=hwcdc,CDCOnBoot=cdc,MSCOnBoot=default,DFUOnBoot=default,UploadMode=default,PartitionScheme=default,CPUFreq=240,UploadSpeed=921600,DebugLevel=none,EraseFlash=none
+            name: ESP32S3-LED
+            fwname: SomfyController.ino.esp32s3-led.bin
+            obname: SomfyController.onboard.esp32s3-led.bin
+            flags: "-D STATUSLED_PIN=47"
+          - board: esp32s3
+            addr_bootloader: 0x0
+            chip: ESP32-S3
+            fqbn: esp32:esp32:esp32s3:JTAGAdapter=default,PSRAM=disabled,FlashMode=qio,FlashSize=4M,LoopCore=1,EventsCore=1,USBMode=hwcdc,CDCOnBoot=cdc,MSCOnBoot=default,DFUOnBoot=default,UploadMode=default,PartitionScheme=default,CPUFreq=240,UploadSpeed=921600,DebugLevel=none,EraseFlash=none
+            #     esp32:esp32:esp32s3:JTAGAdapter=default,PSRAM=disabled,FlashMode=qio,FlashSize=4M,LoopCore=1,EventsCore=1,USBMode=hwcdc,CDCOnBoot=cdc,MSCOnBoot=default,DFUOnBoot=default,UploadMode=default,PartitionScheme=default,CPUFreq=240,UploadSpeed=921600,DebugLevel=none,EraseFlash=none
+            name: ESP32S3-SuperMini
+            fwname: SomfyController.ino.esp32s3-SuperMini.bin
+            obname: SomfyController.onboard.esp32s3-SuperMini.bin
+            flags: "-D STATUSLED_PIN=48"
     steps:
       - name: Get Release
         id: get_release
@@ -155,6 +174,7 @@ jobs:
 
       - name: Configure Arduino Libraries
         run: |
+          arduino-cli lib install 'Adafruit NeoPixel@${{ env.NEOPIXEL_VERSION }}'
           arduino-cli lib install ArduinoJson@${{ env.ARDUINO_JSON_VERSION }}
           arduino-cli lib install PubSubClient@${{ env.PUB_SUB_CLIENT_VERSION }}
           arduino-cli lib install SmartRC-CC1101-Driver-Lib@${{ env.SMARTRC_CC1101_VERSION }}
@@ -163,7 +183,7 @@ jobs:
       - name: Build ${{ matrix.name }}
         run: |
           mkdir -p build${{ matrix.name }}
-          arduino-cli compile --clean --output-dir build${{ matrix.name }} --fqbn ${{ matrix.fqbn }} --warnings none ./SomfyController
+          arduino-cli compile --clean --output-dir build${{ matrix.name }} --fqbn ${{ matrix.fqbn }} --build-property "compiler.cpp.extra_flags=\"${{ matrix.flags }}\"" --warnings none ./SomfyController
 
       - name: ${{ matrix.name }} Image
         run: |

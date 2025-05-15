@@ -156,6 +156,10 @@
                             <input id="fldNtptimesever" name="ntptimeserver" type="text" length=32 data-bind="general.ntpServer" placeholder="Time Server">
                             <label for="fldNtptimeserver">NTP Time Server</label>
                         </div>
+                        <div class="field-group" title="If your board has a NeoPixel (WS2812B), you can use it as a status LED.">
+                            <select id="selStatusLedPin" name="statusLedPin" data-bind="general.statusLedPin" data-datatype="int"></select>
+                            <label for="selStatusLedPin">RGB status LED pin</label>
+                        </div>
                         <div class="field-group" style="vertical-align:middle;">
                             <input id="cbSsdpBroadcast" name="ssdpBroadcast" type="checkbox" data-bind="general.ssdpBroadcast" style="display:inline-block;" />
                             <label for="cbSsdpBroadcast" style="display:inline-block;cursor:pointer;">Broadcast uPnP over SSDP</label>

@@ -4,10 +4,11 @@
 #include "ConfigFile.h"
 #include "Utils.h"
 #include "ConfigSettings.h"
+#include "StatusLed.h"
 
 extern Preferences pref;
 
-#define SHADE_HDR_VER 25
+#define SHADE_HDR_VER 26
 #define SHADE_HDR_SIZE 76
 #define SHADE_REC_SIZE 276
 #define GROUP_REC_SIZE 200
@@ -583,6 +584,7 @@ bool ShadeConfigFile::restoreFile(SomfyShadeController *s, const char *filename,
   if(opts.settings) {
     // First read out the data.
     this->readSettingsRecord();
+    initStatusLed();
   }
   else {
     this->file.seek(this->file.position() + this->header.settingsRecordSize, SeekSet);
@@ -713,6 +715,7 @@ bool ShadeConfigFile::readSettingsRecord() {
     settings.ssdpBroadcast = this->readBool(false);
     if(this->header.version >= 20) settings.checkForUpdate = this->readBool(true);
     if(this->header.version >= 25) settings.Security.fallbackToSoftAP = this->readBool(true);
+    if(this->header.version >= 26) settings.statusLedPin = this->readInt8(0);
     if(this->file.position() != startPos + this->header.settingsRecordSize) {
       Serial.println("Reading to end of settings record");
       this->seekChar(CFG_REC_END);
@@ -890,7 +893,6 @@ bool ShadeConfigFile::loadFile(SomfyShadeController *s, const char *filename) {
       ((SomfyRoom *)&s->rooms[ndx++])->clear();
     }
   }
-
   // We should be valid so start reading.
   for(uint8_t i = 0; i < this->header.shadeRecords; i++) {
     this->readShadeRecord(&s->shades[i]);
@@ -1008,7 +1010,8 @@ bool ShadeConfigFile::writeSettingsRecord() {
   this->writeVarString(settings.NTP.posixZone);
   this->writeBool(settings.ssdpBroadcast);
   this->writeBool(settings.checkForUpdate);
-  this->writeBool(settings.Security.fallbackToSoftAP, CFG_REC_END);
+  this->writeBool(settings.Security.fallbackToSoftAP);
+  this->writeInt8(settings.statusLedPin, CFG_REC_END);
   return true;
 }
 bool ShadeConfigFile::writeNetRecord() {

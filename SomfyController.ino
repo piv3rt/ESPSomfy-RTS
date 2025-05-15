@@ -9,7 +9,9 @@
 #include "Somfy.h"
 #include "MQTT.h"
 #include "GitOTA.h"
+#include "StatusLed.h"
 
+Adafruit_NeoPixel statusLed = Adafruit_NeoPixel();
 ConfigSettings settings;
 Web webServer;
 SocketEmitter sockEmit;
@@ -35,6 +37,8 @@ void setup() {
   if(LittleFS.begin()) Serial.println("File system mounted successfully");
   else Serial.println("Error mounting file system");
   settings.begin();
+  initStatusLed();
+  setStatusLed(0xff, 0xff, 0xff); // White
   if(WiFi.status() == WL_CONNECTED) WiFi.disconnect(true);
   delay(10);
   Serial.println();
@@ -89,5 +93,6 @@ void loop() {
     net.end();
     ESP.restart();
   }
+  ledLoop();
   esp_task_wdt_reset();
 }
