@@ -14,6 +14,7 @@
 #include "MQTT.h"
 #include "GitOTA.h"
 #include "Network.h"
+#include "StatusLed.h"
 
 extern ConfigSettings settings;
 extern SSDPClass SSDP;
@@ -2338,11 +2339,16 @@ void Web::begin() {
       HTTPMethod method = server.method();
       if (method == HTTP_POST || method == HTTP_PUT) {
         // Parse out all the inputs.
-        if (obj.containsKey("hostname") || obj.containsKey("ssdpBroadcast") || obj.containsKey("checkForUpdate")) {
+        if (obj.containsKey("hostname") || obj.containsKey("ssdpBroadcast") || obj.containsKey("checkForUpdate") || obj.containsKey("statusLedPin")) {
           bool checkForUpdate = settings.checkForUpdate;
+          uint8_t statusLedPin = settings.statusLedPin;
           settings.fromJSON(obj);
           settings.save();
           if(settings.checkForUpdate != checkForUpdate) git.emitUpdateCheck();
+          if(settings.statusLedPin != statusLedPin) {
+            if (settings.statusLedPin == 0) resetStatusLed();
+            initStatusLed();
+          }
           if(obj.containsKey("hostname")) net.updateHostname();
         }
         if (obj.containsKey("ntpServer") || obj.containsKey("ntpServer")) {

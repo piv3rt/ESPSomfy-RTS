@@ -206,6 +206,7 @@ bool ConfigSettings::load() {
   this->ssdpBroadcast = pref.getBool("ssdpBroadcast", true);
   this->checkForUpdate = pref.getBool("checkForUpdate", true);
   this->connType = static_cast<conn_types_t>(pref.getChar("connType", 0x00));
+  this->statusLedPin = pref.getInt("statusLedPin", DEFAULT_STATUSLED_PIN);
   //Serial.printf("Preference GFG Free Entries: %d\n", pref.freeEntries());
   pref.end();
   if(this->connType == conn_types_t::unset) {
@@ -238,6 +239,7 @@ bool ConfigSettings::save() {
   pref.putBool("ssdpBroadcast", this->ssdpBroadcast);
   pref.putChar("connType", static_cast<uint8_t>(this->connType));
   pref.putBool("checkForUpdate", this->checkForUpdate);
+  pref.putInt("statusLedPin", this->statusLedPin);
   pref.end();
   return true;
 }
@@ -247,6 +249,7 @@ bool ConfigSettings::toJSON(JsonObject &obj) {
   obj["connType"] = static_cast<uint8_t>(this->connType);
   obj["chipModel"] = this->chipModel;
   obj["checkForUpdate"] = this->checkForUpdate;
+  obj["statusLedPin"] = this->statusLedPin;
   return true;
 }
 void ConfigSettings::toJSON(JsonResponse &json) {
@@ -255,6 +258,7 @@ void ConfigSettings::toJSON(JsonResponse &json) {
   json.addElem("connType", static_cast<uint8_t>(this->connType));
   json.addElem("chipModel", this->chipModel);
   json.addElem("checkForUpdate", this->checkForUpdate);
+  json.addElem("statusLedPin", this->statusLedPin);
 }
 
 bool ConfigSettings::requiresAuth() { return this->Security.type != security_types::None; }
@@ -263,6 +267,7 @@ bool ConfigSettings::fromJSON(JsonObject &obj) {
     if(obj.containsKey("hostname")) this->parseValueString(obj, "hostname", this->hostname, sizeof(this->hostname));
     if(obj.containsKey("connType")) this->connType = static_cast<conn_types_t>(obj["connType"].as<uint8_t>());
     if(obj.containsKey("checkForUpdate")) this->checkForUpdate = obj["checkForUpdate"];
+    if(obj.containsKey("statusLedPin")) this->statusLedPin = obj["statusLedPin"];
     return true;
 }
 void ConfigSettings::print() {
@@ -271,6 +276,8 @@ void ConfigSettings::print() {
   this->NTP.print();
   if(this->connType == conn_types_t::wifi || this->connType == conn_types_t::unset) this->WIFI.print();
   if(this->connType == conn_types_t::ethernet || this->connType == conn_types_t::ethernetpref) this->Ethernet.print();
+  Serial.printf("Status LED pin: %d", this->statusLedPin);
+  Serial.println(this->statusLedPin == 0 ? " (Disabled)" : "");
 }
 void ConfigSettings::emitSockets() {}
 void ConfigSettings::emitSockets(uint8_t num) {}
